@@ -1,0 +1,5 @@
+# Ignoring log files
+*.log
+
+# Ignoring bin directories and its contents
+bin/*
