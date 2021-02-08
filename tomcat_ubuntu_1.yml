@@ -1,0 +1,25 @@
+---
+- hosts: appserver
+  become: yes
+  vars:
+    tomcat_package_name: tomcat8
+  pre_tasks:
+    - name: update ubuntu packages
+      apt:
+        update_cache: yes
+  tasks:
+    - name: install tomcat
+      package:
+        name: "{{ tomcat_package_name }}"
+        state: present
+      notify:
+        - enable and restart tomcat
+  handlers:
+    - name: enable and restart tomcat
+      service:
+        name: "{{ tomcat_package_name }}"
+        enabled: yes
+        state: started
+
+
+

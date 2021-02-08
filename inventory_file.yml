@@ -1,0 +1,5 @@
+[ centos ]
+172.31.4.122 package_name="httpd" php_packages='["php","php-mysql","php-fpm"]'
+
+[ ubuntu ]
+172.31.3.192 package_name="apache2" php_packages='["php","libapahe2-mod-php","php-mysql","php-cli"]'

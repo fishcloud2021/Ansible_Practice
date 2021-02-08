@@ -1,0 +1,45 @@
+---
+- hosts: appserver
+  become: yes
+  vars:
+    tomcat_package_name: tomcat
+    tomcat_additional_packages:
+      - tomcat-webapps
+      - tomcat-admin-webapps
+    tomcat_conf_location: "usr/share/tomcat/conf/tomcat.conf"
+    xmx_size: 512m
+    MaxPermSize: 256m
+  pre_tasks:
+    - name: update ubuntu packages
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+  tasks:
+    - name: install tomcat
+      package:
+        name: "{{ tomcat_package_name }}"
+        state: present
+      notify:
+        - enable and restart tomcat
+    
+    - name: install additional packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ tomcat_additional_packages }}"
+      notify:
+        - enable and restart tomcat
+
+    - name: copy tomcat configuration
+      template:
+        src: tomcat.conf.j2
+        dest: /usr/share/tomcat/conf/tomcat.conf
+      notify:
+        - enable and restart tomcat
+  
+  handlers:
+    - name: enable and restart tomcat
+      service:
+        name: "{{ tomcat_package_name }}"
+        enabled: yes
+        state: restarted

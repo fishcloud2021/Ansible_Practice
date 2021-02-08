@@ -1,0 +1,36 @@
+---
+- name: install apache
+  hosts: all
+  become: yes
+  tasks:
+    - name: fail when node is not Ubuntu or Centos
+      fail:
+        msg: This playbook works only on Centos and Ubuntu Nodes
+      when: ansible_facts['distribution'] != "Ubuntu" and ansible_facts['distribution'] != "CentOS"
+    
+    - name: Update Ubuntu packages
+      apt:
+        update_cache: yes
+      when: ansible_facts['distribution'] == "Ubuntu"
+    
+    - name: install apache
+      package:
+        name: "{{ package_name }}"
+        state: present
+      notify:
+        - restart  and enable  apache
+    
+    - name: install php packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ php_packages }}"
+      notify:
+        - restart and enable  apache
+
+  handlers:
+    - name: restart and enable apache
+      service:
+        name: "{{ package_name }}"
+        enabled: yes
+        state: restarted

@@ -1,0 +1,35 @@
+---
+- name: install lamp stack on Centos
+  become: yes
+  host: centos
+  tasks:
+    - name: install apache
+      yum:
+        name: httpd
+        state: present
+    - name: start and enable apache
+      service:
+        name: httpd
+        enabled: yes
+        state: started
+    - name: install phppackages
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - php
+        - php-mysql
+        - php-fpm
+     - name: restart apache
+       service:
+         name: httpd
+         state: restarted
+         
+
+
+
+
+
+
+
+

@@ -1,0 +1,44 @@
+---
+- name: 'Install and configure lamp'
+  hosts: ubuntu
+  become: yes
+  tasks:
+  	- name: install apache2 and update ubuntu package definations.
+  	  apt:
+  	    name: apache2
+  	    update_cache: yes
+  	    state: present
+    - name: enable and start apache2
+      service:
+        name: apache2
+        enabled: yes
+        state: started
+    - name: install php
+      apt:
+        name: libapache2-mod-php
+        state: present
+    - name: install php-mysql
+      apt:
+        name: php-mysql
+        state: present
+    - name: resatrt apache
+      service:
+      	name: apache2
+      	state: restarted
+      	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

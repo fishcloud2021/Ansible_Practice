@@ -1,0 +1,40 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: install and configure apache
+      block:
+        - name: install apache
+          package:
+            name: apache2
+          state: present
+          when: ansible_os_family == "Debian"
+        
+        - name: install php modules
+          package:
+            name: "{{ item }}"
+          loop:
+            - php
+            - php-mysql
+            - php--cli
+          when: ansible_os_family == "Debian"
+      
+      rescue:
+        - name: error occured
+          debug:
+            msg: error occured
+      always:
+        - name: this executes always
+          debug:
+            msg: "This always executes"
+
+
+
+
+
+
+
+
+
+
+
